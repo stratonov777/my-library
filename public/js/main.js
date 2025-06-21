@@ -129,8 +129,8 @@ export function applyFiltersAndSearch() {
     if (searchQuery) {
         filteredBooks = filteredBooks.filter(
             (book) =>
-                book.title.toLowerCase().includes(searchQuery) ||
-                book.author.toLowerCase().includes(searchQuery)
+                book.title?.toLowerCase().includes(searchQuery) ||
+                book.author?.toLowerCase().includes(searchQuery)
         );
     }
 
