@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Моя домашняя библиотека</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
+        />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <header>
+            <h1>Моя домашняя библиотека</h1>
+            <div class="controls">
+                <button id="add-book-btn">Добавить книгу</button>
+            </div>
+        </header>
+
+        <nav class="filters">
+            <button class="filter-btn active" data-filter="my-library">
+                Моя библиотека
+            </button>
+            <button class="filter-btn" data-filter="to-read">
+                Хочу прочитать
+            </button>
+            <button class="filter-btn" data-filter="wishlist">
+                Хочу купить
+            </button>
+        </nav>
+
+        <div class="list-controls">
+            <input
+                type="search"
+                id="search-input"
+                placeholder="Поиск по названию или автору..."
+            />
+            <select id="sort-select">
+                <option value="default">Сортировка по умолчанию</option>
+                <option value="title-asc">По названию (А-Я)</option>
+                <option value="title-desc">По названию (Я-А)</option>
+                <option value="author-asc">По автору (А-Я)</option>
+                <option value="author-desc">По автору (Я-А)</option>
+                <option value="rating-desc">
+                    По рейтингу (сначала высокий)
+                </option>
+                <option value="rating-asc">По рейтингу (сначала низкий)</option>
+            </select>
+        </div>
+
+        <main>
+            <div id="book-list-container"></div>
+            <div id="show-more-container"></div>
+            <div id="pagination-container"></div>
+        </main>
+
+        <dialog id="add-book-dialog">
+            <form id="add-book-form">
+                <h2>Добавить новую книгу</h2>
+                <div class="form-group">
+                    <label for="title">Название</label>
+                    <input type="text" id="title" name="title" required />
+                </div>
+                <div class="form-group">
+                    <label for="author">Автор</label>
+                    <input type="text" id="author" name="author" required />
+                </div>
+                <div class="form-group">
+                    <label for="coverImage">URL обложки</label>
+                    <input type="url" id="coverImage" name="coverImage" />
+                </div>
+                <div class="form-group">
+                    <label for="status">Статус</label>
+                    <select id="status" name="status">
+                        <option value="read">Прочитана</option>
+                        <option value="to-read">Хочу прочитать</option>
+                        <option value="reading">Читаю сейчас</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="tags">Теги (через запятую)</label>
+                    <input type="text" id="tags" name="tags" />
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Сохранить</button>
+                    <button type="button" id="cancel-btn">Отмена</button>
+                </div>
+            </form>
+        </dialog>
+
+        <script src="script.js" defer></script>
+        <dialog id="detail-dialog">
+            <div id="detail-view-content"></div>
+        </dialog>
+    </body>
+</html>

@@ -1,0 +1,640 @@
+/* ============================================== */
+/* 1. ПЕРЕМЕННЫЕ (ДИЗАЙН В СТИЛЕ stratonov777)    */
+/* ============================================== */
+:root {
+    /* Цветовая палитра (взята с вашего сайта) */
+    --bg-color: #f8f9fa; /* Очень светлый серый фон */
+    --surface-color: #ffffff; /* Белый цвет для карточек */
+    --primary-color: #00a391; /* Ваш фирменный бирюзовый */
+    --primary-color-darker: #008274; /* Затемненный для hover-эффектов */
+    --border-color: #dee2e6; /* Светло-серая граница */
+    --danger-color: #f5365c;
+
+    --text-primary: #212529; /* Почти черный текст для максимальной читабельности */
+    --text-secondary: #6c757d; /* Серый второстепенный текст */
+
+    /* Типографика (оставляем Inter, он идеален) */
+    --font-family: 'Inter', sans-serif;
+
+    /* Прочее */
+    --border-radius: 8px;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Мягкая тень как у вас */
+    --transition-speed: 0.2s;
+}
+
+/* ============================================== */
+/* 2. ОБЩИЕ СТИЛИ                                */
+/* ============================================== */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: var(--font-family);
+    margin: 0;
+    padding: 40px;
+    -webkit-font-smoothing: antialiased; /* Делает текст более четким */
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto 40px auto;
+}
+
+header h1 {
+    font-size: 2.25rem;
+}
+
+/* ============================================== */
+/* 3. ФИЛЬТРЫ И КНОПКИ                           */
+/* ============================================== */
+.filters {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.filter-btn {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all var(--transition-speed);
+}
+
+.filter-btn:hover {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.filter-btn.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
+}
+
+/* ============================================== */
+/* 4. КАРТОЧКИ КНИГ                              */
+/* ============================================== */
+#book-list-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.book-card {
+    background-color: var(--surface-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    transition: transform var(--transition-speed),
+        box-shadow var(--transition-speed);
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.book-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--box-shadow);
+}
+
+.book-cover {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    display: block;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.book-info {
+    padding: 15px;
+}
+.book-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 5px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.book-author {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin: 0 0 10px 0;
+}
+.book-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+}
+.book-rating {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+.book-status {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+    background-color: rgba(0, 163, 145, 0.1);
+    color: var(--primary-color);
+}
+
+/* ============================================== */
+/* 5. МОДАЛЬНЫЕ ОКНА И ФОРМЫ                     */
+/* ============================================== */
+dialog {
+    background-color: var(--surface-color);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(3px);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    background-color: #fff;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    width: 100%;
+    padding: 12px;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 163, 145, 0.1);
+}
+
+/* Общие стили для кнопок в формах и хэдере */
+.btn {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 12px 22px;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+}
+.btn:hover {
+    background-color: var(--primary-color-darker);
+}
+.btn-danger {
+    background-color: var(--danger-color);
+}
+.btn-danger:hover {
+    background-color: #d12c4e;
+}
+.btn-secondary {
+    background-color: #6c757d;
+}
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+/* ============================================== */
+/* 6. АДАПТИВНОСТЬ (без изменений)                */
+/* ============================================== */
+@media (max-width: 768px) {
+    body {
+        padding: 20px;
+    }
+    header {
+        flex-direction: column;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    #book-list-container {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+    }
+    .book-cover {
+        height: 280px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 15px;
+    }
+    #book-list-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    .book-cover {
+        height: 250px;
+    }
+    .book-info {
+        padding: 10px;
+    }
+    .book-title {
+        font-size: 0.9rem;
+    }
+    .book-author {
+        font-size: 0.8rem;
+    }
+    .book-meta {
+        font-size: 0.7rem;
+    }
+}
+
+/* ============================================== */
+/* 7. СТИЛИ ДЛЯ БЛОКА РЕКОМЕНДАЦИЙ                */
+/* ============================================== */
+.detail-main-content {
+    display: flex;
+    gap: 20px;
+}
+.detail-cover {
+    width: 150px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 5px;
+    flex-shrink: 0;
+}
+.detail-info {
+    flex-grow: 1;
+}
+.detail-review {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+.recommendations-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+.recommendations-section h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+#recommendations-list {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto; /* Позволяет скроллить, если не влезает */
+}
+.recommendation-card {
+    cursor: pointer;
+    flex: 0 0 90px; /* Не сжиматься, не растягиваться, базовая ширина 90px */
+    text-align: center;
+    transition: opacity var(--transition-speed);
+}
+.recommendation-card:hover {
+    opacity: 0.8;
+}
+.recommendation-card img {
+    width: 90px;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
+.recommendation-title {
+    font-size: 0.8rem;
+    color: var(--text-primary);
+    margin: 0;
+    line-height: 1.3;
+}
+.placeholder {
+    color: var(--text-secondary);
+}
+
+/* ============================================== */
+/* 8. СТИЛИ ДЛЯ РАСШИРЕННОГО ОКНА ДЕТАЛЕЙ         */
+/* ============================================== */
+
+.detail-header {
+    display: flex;
+    gap: 25px;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+.detail-header-info {
+    flex-grow: 1;
+}
+.detail-header-info h2 {
+    margin: 0;
+    font-size: 1.8rem;
+}
+.detail-header-info h3 {
+    margin: 5px 0 15px 0;
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+}
+.series-info {
+    font-style: italic;
+    color: var(--primary-color);
+    margin-top: -10px;
+}
+.detail-actions-main {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.detail-section {
+    margin-bottom: 25px;
+}
+.detail-section h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 5px;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px 20px;
+}
+.detail-grid p {
+    margin: 5px 0;
+}
+
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 5px;
+}
+.tag-item {
+    background-color: rgba(0, 163, 145, 0.1);
+    color: #008175;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.placeholder-inline {
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* Стили для формы редактирования */
+.edit-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+.edit-form-grid fieldset {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.edit-form-grid legend {
+    font-family: var(--font-header);
+    font-weight: 500;
+    padding: 0 10px;
+    color: var(--text-secondary);
+}
+.edit-form-grid .wide {
+    grid-column: 1 / -1; /* Растягиваем на всю ширину */
+}
+
+@media (max-width: 768px) {
+    .edit-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+/* ============================================== */
+/* 9. СТИЛИ ДЛЯ ПОИСКА                            */
+/* ============================================== */
+
+.search-container {
+    max-width: 1400px;
+    margin: 0 auto 40px auto;
+    display: flex;
+    justify-content: center;
+}
+
+#search-input {
+    width: 60%;
+    max-width: 700px;
+    padding: 15px 20px;
+    font-size: 1rem;
+    font-family: var(--font-family);
+    color: var(--text-primary);
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    transition: all var(--transition-speed);
+}
+
+#search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(0, 163, 145, 0.1);
+}
+
+#search-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.8;
+}
+
+/* ============================================== */
+/* 10. СТИЛИ ДЛЯ СОРТИРОВКИ                       */
+/* ============================================== */
+
+.list-controls {
+    max-width: 1400px;
+    margin: 0 auto 40px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+#search-input {
+    margin: 0; /* Убираем старый отступ */
+}
+
+#sort-select {
+    padding: 15px;
+    font-size: 1rem;
+    font-family: var(--font-family);
+    color: var(--text-primary);
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    transition: all var(--transition-speed);
+    cursor: pointer;
+}
+
+#sort-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(0, 163, 145, 0.1);
+}
+
+/* ============================================== */
+/* 11. СТИЛИ ДЛЯ ПАГИНАЦИИ                        */
+/* ============================================== */
+
+#pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 40px;
+}
+
+.page-btn {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-weight: 500;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* Делаем кнопки круглыми */
+    cursor: pointer;
+    transition: all var(--transition-speed);
+}
+
+.page-btn:hover {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.page-btn.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
+    cursor: default;
+}
+
+.page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ============================================== */
+/* 12. СТИЛИ ДЛЯ КНОПКИ "ПОКАЗАТЬ ЕЩЕ"            */
+/* ============================================== */
+
+#show-more-container {
+    text-align: center;
+    margin-top: 40px;
+}
+
+#show-more-btn {
+    background-color: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 12px 30px;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all var(--transition-speed);
+}
+
+#show-more-btn:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+/* ============================================== */
+/* 13. СТИЛИ ДЛЯ МЕСТОПОЛОЖЕНИЯ КНИГИ             */
+/* ============================================== */
+
+.book-card-location {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(2px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-size: 1.2rem;
+    color: var(--text-primary);
+}
+
+.book-card {
+    position: relative; /* Необходимо для позиционирования значка */
+}
+
+.detail-location-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+#move-location-btn {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+}
+
+/* ============================================== */
+/* 14. СТИЛИ ДЛЯ ЦИФРОВЫХ КНИГ                    */
+/* ============================================== */
+
+.book-cover-placeholder {
+    width: 100%;
+    height: 350px; /* Та же высота, что и у обычной обложки */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+    color: #fff;
+    font-family: var(--font-header);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.book-cover-placeholder h3 {
+    font-size: 1.5rem;
+    padding: 20px;
+    margin: 0;
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
