@@ -1,0 +1,61 @@
+// public/scss/base/_layout.scss
+
+.main-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    flex: 0 0 300px; // Не расти, не сжиматься, базовая ширина 300px
+    background-color: var(--surface-color);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    position: sticky; // "Приклеиваем" сайдбар
+    top: 0; // к самому верху видимой области
+    height: 100vh; // Задаем высоту равной высоте экрана
+}
+
+.sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    h2 {
+        margin: 0;
+        text-align: center;
+        font-size: 1.5rem;
+    }
+}
+
+.sidebar-content {
+    padding: 20px;
+    overflow-y: auto; // Если фильтров много, появится скролл
+}
+
+.content {
+    flex: 1; // Занимает все остальное пространство
+    padding: 40px;
+}
+
+.controls-group {
+    margin-bottom: 25px;
+
+    label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 8px;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+
+    select,
+    input,
+    .btn {
+        width: 100%;
+    }
+
+    .filters {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+}

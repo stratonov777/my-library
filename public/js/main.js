@@ -13,21 +13,25 @@ const addBookBtn = document.getElementById('add-book-btn');
 const addDialog = document.getElementById('add-book-dialog');
 const cancelAddBtn = document.getElementById('cancel-btn');
 const addBookForm = document.getElementById('add-book-form');
+// Исправленный список констант для фильтров
+const authorFilter = document.getElementById('author-filter');
+const genreFilter = document.getElementById('genre-filter');
+const authorSeriesFilter = document.getElementById('author-series-filter');
+const publisherSeriesFilter = document.getElementById(
+    'publisher-series-filter'
+);
 
-// --- Новые функции пагинации, которые раньше были в script.js ---
+// --- Логика пагинации ---
 
 function displayPage(pageNumber, append = false) {
     updateState({ currentPage: pageNumber });
-
     const startIndex = (state.currentPage - 1) * state.booksPerPage;
     const endIndex = startIndex + state.booksPerPage;
-
     const booksForCurrentPage = state.currentlyDisplayedBooks.slice(
         startIndex,
         endIndex
     );
     const listType = state.activeFilter === 'wishlist' ? 'wishlist' : 'library';
-
     renderBooks(booksForCurrentPage, listType, append);
     updatePaginationUI();
 }
@@ -38,12 +42,10 @@ function setupPagination() {
     const pageCount = Math.ceil(
         state.currentlyDisplayedBooks.length / state.booksPerPage
     );
-
     if (pageCount < 2) {
         document.getElementById('show-more-container').innerHTML = '';
         return;
     }
-
     for (let i = 1; i <= pageCount; i++) {
         const button = document.createElement('button');
         button.className = 'page-btn';
@@ -59,11 +61,9 @@ function setupPagination() {
 function renderShowMoreButton() {
     const showMoreContainer = document.getElementById('show-more-container');
     showMoreContainer.innerHTML = '';
-
     const totalPages = Math.ceil(
         state.currentlyDisplayedBooks.length / state.booksPerPage
     );
-
     if (state.currentPage < totalPages) {
         const button = document.createElement('button');
         button.id = 'show-more-btn';
@@ -99,6 +99,32 @@ export function applyFiltersAndSearch() {
         filteredBooks = [...state.allBooksData.wishlist];
     }
 
+    const selectedAuthor = authorFilter.value;
+    const selectedGenre = genreFilter.value;
+    const selectedAuthorSeries = authorSeriesFilter.value;
+    const selectedPublisherSeries = publisherSeriesFilter.value;
+
+    if (selectedAuthor !== 'all') {
+        filteredBooks = filteredBooks.filter(
+            (book) => book.author === selectedAuthor
+        );
+    }
+    if (selectedGenre !== 'all') {
+        filteredBooks = filteredBooks.filter(
+            (book) => book.genre === selectedGenre
+        );
+    }
+    if (selectedAuthorSeries !== 'all') {
+        filteredBooks = filteredBooks.filter(
+            (book) => book.series?.name === selectedAuthorSeries
+        );
+    }
+    if (selectedPublisherSeries !== 'all') {
+        filteredBooks = filteredBooks.filter(
+            (book) => book.publisherSeries === selectedPublisherSeries
+        );
+    }
+
     const searchQuery = searchInput.value.toLowerCase().trim();
     if (searchQuery) {
         filteredBooks = filteredBooks.filter(
@@ -126,31 +152,54 @@ export function applyFiltersAndSearch() {
                     return (
                         (a.rating?.overall || 11) - (b.rating?.overall || 11)
                     );
+                case 'date-desc':
+                    return (
+                        new Date(b.dateRead || 0) - new Date(a.dateRead || 0)
+                    );
+                case 'date-asc':
+                    return (
+                        new Date(a.dateRead || '9999-12-31') -
+                        new Date(b.dateRead || '9999-12-31')
+                    );
                 default:
                     return 0;
             }
         });
     }
 
-    updateState({ currentlyDisplayedBooks: filteredBooks, currentPage: 1 });
-
-    setupPagination();
-    displayPage(state.currentPage, false);
+    updateState({ currentlyDisplayedBooks: filteredBooks });
+    displayPage(1, false);
 }
 
 // --- Инициализация и обработчики событий ---
 
-async function initApp() {
-    try {
-        const data = await fetchAllBooks();
-        updateState({ allBooksData: data });
-        applyFiltersAndSearch();
-        setupEventListeners();
-    } catch (error) {
-        console.error('Не удалось инициализировать приложение:', error);
-        document.getElementById('book-list-container').innerHTML =
-            '<p>Ошибка загрузки данных. Пожалуйста, обновите страницу.</p>';
-    }
+function populateFilterDropdowns(books) {
+    const authors = new Set();
+    const genres = new Set();
+    const authorSeries = new Set();
+    const publisherSeries = new Set();
+
+    books.forEach((book) => {
+        if (book.author) authors.add(book.author);
+        if (book.genre) genres.add(book.genre);
+        if (book.series && book.series.name) authorSeries.add(book.series.name);
+        if (book.publisherSeries) publisherSeries.add(book.publisherSeries);
+    });
+
+    const populate = (selectElement, items) => {
+        const sortedItems = [...items].sort((a, b) => a.localeCompare(b));
+        sortedItems.forEach((item) => {
+            const option = document.createElement('option');
+            option.value = item;
+            option.textContent = item;
+            selectElement.appendChild(option);
+        });
+    };
+
+    populate(authorFilter, authors);
+    populate(genreFilter, genres);
+    populate(authorSeriesFilter, authorSeries);
+    populate(publisherSeriesFilter, publisherSeries);
 }
 
 function setupEventListeners() {
@@ -163,19 +212,35 @@ function setupEventListeners() {
         });
     });
 
+    // Исправленный список обработчиков
     searchInput.addEventListener('input', applyFiltersAndSearch);
     sortSelect.addEventListener('change', applyFiltersAndSearch);
+    authorFilter.addEventListener('change', applyFiltersAndSearch);
+    genreFilter.addEventListener('change', applyFiltersAndSearch);
+    authorSeriesFilter.addEventListener('change', applyFiltersAndSearch);
+    publisherSeriesFilter.addEventListener('change', applyFiltersAndSearch);
 
     addBookBtn.addEventListener('click', () => addDialog.showModal());
     cancelAddBtn.addEventListener('click', () => addDialog.close());
 
-    // Обработчик для формы добавления пока остается здесь, так как он простой
-    // и мы не создавали для него отдельный модуль
     addBookForm.addEventListener('submit', async (event) => {
         event.preventDefault();
-        // ... здесь будет обновленная логика добавления книги
         alert('Форма добавления будет обновлена в следующем шаге!');
     });
+}
+
+async function initApp() {
+    try {
+        const data = await fetchAllBooks();
+        updateState({ allBooksData: data });
+        populateFilterDropdowns(data.myLibrary);
+        applyFiltersAndSearch();
+        setupEventListeners();
+    } catch (error) {
+        console.error('Не удалось инициализировать приложение:', error);
+        document.getElementById('book-list-container').innerHTML =
+            '<p>Ошибка загрузки данных. Пожалуйста, обновите страницу.</p>';
+    }
 }
 
 // --- Запуск приложения ---

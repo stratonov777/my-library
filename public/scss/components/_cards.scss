@@ -22,6 +22,7 @@
     &:hover {
         transform: translateY(-5px);
         box-shadow: var(--box-shadow);
+        border-color: var(--primary-color);
     }
 }
 

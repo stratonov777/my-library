@@ -1,6 +1,6 @@
 // public/js/ui/modals.js
 
-import { state, updateState } from '../state.js';
+import { state } from '../state.js';
 import {
     fetchRecommendations,
     updateBook,
@@ -30,7 +30,6 @@ export async function showDetailModal(bookId, listType) {
     renderDetailView(bookData, listType);
     detailDialog.showModal();
 
-    // После открытия окна запрашиваем и отображаем рекомендации
     if (listType === 'library') {
         try {
             const recommendations = await fetchRecommendations(bookId);
@@ -53,14 +52,6 @@ export async function showDetailModal(bookId, listType) {
  * @param {string} listType - Тип списка.
  */
 function renderDetailView(book, listType) {
-    const createTagList = (items) => {
-        if (!items || items.length === 0)
-            return '<p class="placeholder-inline">Нет данных</p>';
-        return items
-            .map((item) => `<span class="tag-item">${item}</span>`)
-            .join('');
-    };
-
     const recommendationsBlock =
         listType === 'library'
             ? `
@@ -103,7 +94,9 @@ function renderDetailView(book, listType) {
                 <h3>${book.author}</h3>
                 ${
                     book.series?.name
-                        ? `<p class="series-info">${book.series.name}, книга #${book.series.bookNumber}</p>`
+                        ? `<p class="series-info">${book.series.name}, книга #${
+                              book.series.bookNumber || '?'
+                          }</p>`
                         : ''
                 }
                 <div class="detail-actions-main">
@@ -165,7 +158,6 @@ function renderDetailView(book, listType) {
         ${recommendationsBlock}
     `;
 
-    // Навешиваем обработчики на кнопки
     const moveBtn = document.getElementById('move-location-btn');
     if (moveBtn) {
         moveBtn.addEventListener('click', () =>
@@ -178,7 +170,6 @@ function renderDetailView(book, listType) {
     document
         .getElementById('close-detail-btn')
         .addEventListener('click', () => detailDialog.close());
-    // Вот исправленная строка:
     document
         .getElementById('delete-btn')
         .addEventListener('click', () => handleDeleteBook(book.id));
@@ -203,7 +194,7 @@ function renderEditView(book, listType) {
                 <div class="form-group"><label for="edit-author">Автор</label><input type="text" id="edit-author" value="${
                     book.author || ''
                 }"></div>
-                <div class="form-group"><label for="edit-coverImage">URL обложки</label><input type="text" id="edit-coverImage" value="${
+                <div class="form-group"><label for="edit-coverImage">Путь к обложке</label><input type="text" id="edit-coverImage" value="${
                     book.coverImage || ''
                 }"></div>
                 <div class="form-group"><label for="edit-format">Формат</label>
@@ -250,7 +241,7 @@ function renderEditView(book, listType) {
                 }"></div>
             </fieldset>
             
-            <fieldset>
+            <fieldset class="wide">
                 <legend>Аналитика</legend>
                 <div class="form-group"><label for="edit-genre">Жанр</label><input type="text" id="edit-genre" value="${
                     book.genre || ''
@@ -261,29 +252,29 @@ function renderEditView(book, listType) {
                 <div class="form-group"><label for="edit-series-number">№ в цикле</label><input type="number" id="edit-series-number" value="${
                     book.series?.bookNumber || ''
                 }"></div>
-                <div class="form-group wide"><label for="edit-keyThemes">Ключевые темы</label><input type="text" id="edit-keyThemes" value="${arrayToString(
+                <div class="form-group wide"><label for="edit-keyThemes">Ключевые темы (через запятую)</label><input type="text" id="edit-keyThemes" value="${arrayToString(
                     book.keyThemes
                 )}"></div>
-                <div class="form-group wide"><label for="edit-tags">Теги</label><input type="text" id="edit-tags" value="${arrayToString(
+                <div class="form-group wide"><label for="edit-tags">Теги (через запятую)</label><input type="text" id="edit-tags" value="${arrayToString(
                     book.tags
                 )}"></div>
             </fieldset>
 
-            <fieldset>
+            <fieldset class="wide">
                 <legend>Моя оценка</legend>
-                <div class="form-group"><label for="edit-rating-overall">Общая (1-10)</label><input type="number" id="edit-rating-overall" value="${
+                <div class="form-group"><label for="edit-rating-overall">Общая (1-10)</label><input type="number" id="edit-rating-overall" min="1" max="10" value="${
                     book.rating?.overall || ''
                 }"></div>
-                <div class="form-group"><label for="edit-rating-plot">Сюжет</label><input type="number" id="edit-rating-plot" value="${
+                <div class="form-group"><label for="edit-rating-plot">Сюжет</label><input type="number" id="edit-rating-plot" min="1" max="10" value="${
                     book.rating?.plot || ''
                 }"></div>
-                <div class="form-group"><label for="edit-rating-characters">Персонажи</label><input type="number" id="edit-rating-characters" value="${
+                <div class="form-group"><label for="edit-rating-characters">Персонажи</label><input type="number" id="edit-rating-characters" min="1" max="10" value="${
                     book.rating?.characters || ''
                 }"></div>
-                <div class="form-group"><label for="edit-rating-world">Мир</label><input type="number" id="edit-rating-world" value="${
+                <div class="form-group"><label for="edit-rating-world">Мир</label><input type="number" id="edit-rating-world" min="1" max="10" value="${
                     book.rating?.worldBuilding || ''
                 }"></div>
-                <div class="form-group"><label for="edit-rating-prose">Стиль</label><input type="number" id="edit-rating-prose" value="${
+                <div class="form-group"><label for="edit-rating-prose">Стиль</label><input type="number" id="edit-rating-prose" min="1" max="10" value="${
                     book.rating?.prose || ''
                 }"></div>
                 <div class="form-group wide"><label for="edit-myNotes">Заметки</label><textarea id="edit-myNotes" rows="4">${
@@ -302,7 +293,7 @@ function renderEditView(book, listType) {
         .getElementById('edit-book-form')
         .addEventListener('submit', (e) => {
             e.preventDefault();
-            handleSaveChanges(book.id);
+            handleSaveChanges(book.id, book.status); // Передаем и статус для логики
         });
     document
         .getElementById('cancel-edit-btn')
@@ -343,8 +334,9 @@ function renderRecommendations(recommendations) {
 /**
  * Собирает данные из формы редактирования и отправляет на сервер.
  * @param {number} bookId - ID сохраняемой книги.
+ * @param {string} originalStatus - Исходный статус книги.
  */
-async function handleSaveChanges(bookId) {
+async function handleSaveChanges(bookId, originalStatus) {
     const stringToArray = (str) =>
         str ? str.split(',').map((item) => item.trim()) : [];
     const getIntOrNull = (id) => {
@@ -353,15 +345,42 @@ async function handleSaveChanges(bookId) {
     };
 
     const updatedBook = {
-        // Собираем все данные из формы...
-        // ...
+        id: bookId,
+        title: document.getElementById('edit-title').value,
+        author: document.getElementById('edit-author').value,
+        coverImage: document.getElementById('edit-coverImage').value,
+        dateRead: document.getElementById('edit-dateRead').value,
+        location: document.getElementById('edit-location').value,
+        format: document.getElementById('edit-format').value,
+        isbn: document.getElementById('edit-isbn').value,
+        publisher: document.getElementById('edit-publisher').value,
+        publicationYear: getIntOrNull('edit-publicationYear'),
+        pageCount: getIntOrNull('edit-pageCount'),
+        genre: document.getElementById('edit-genre').value,
+        series: {
+            name: document.getElementById('edit-series-name').value,
+            bookNumber: getIntOrNull('edit-series-number'),
+        },
+        publisherSeries: document.getElementById('edit-publisherSeries').value,
+        tags: stringToArray(document.getElementById('edit-tags').value),
+        keyThemes: stringToArray(
+            document.getElementById('edit-keyThemes').value
+        ),
+        status: originalStatus, // Сохраняем исходный статус, т.к. в форме редактирования его нет
+        rating: {
+            overall: getIntOrNull('edit-rating-overall'),
+            plot: getIntOrNull('edit-rating-plot'),
+            characters: getIntOrNull('edit-rating-characters'),
+            worldBuilding: getIntOrNull('edit-rating-world'),
+            prose: getIntOrNull('edit-rating-prose'),
+        },
+        myNotes: document.getElementById('edit-myNotes').value,
     };
 
     try {
         await updateBook(bookId, updatedBook);
         detailDialog.close();
-        // Перезапускаем приложение, чтобы обновить все данные
-        // В будущем можно будет обновлять состояние локально для большей скорости
+        // Просто перезагружаем страницу - это самый надежный способ обновить все
         location.reload();
     } catch (error) {
         console.error('Не удалось сохранить изменения:', error);
@@ -369,20 +388,23 @@ async function handleSaveChanges(bookId) {
     }
 }
 
+/**
+ * Обрабатывает удаление книги с запросом пароля.
+ * @param {number} bookId - ID удаляемой книги.
+ */
 async function handleDeleteBook(bookId) {
-    const password = '3452'; // Ваш пароль
+    const password = '3452';
     const userInput = prompt('Для подтверждения удаления введите пароль:');
 
-    // Если пользователь нажал "Отмена", userInput будет null
     if (userInput === null) {
-        return; // Прерываем операцию
+        return; // Пользователь нажал "Отмена"
     }
 
     if (userInput === password) {
         try {
-            await deleteBook(bookId); // Вызываем функцию из api.js
+            await deleteBook(bookId);
             detailDialog.close();
-            location.reload(); // Перезагружаем страницу, чтобы обновить список
+            location.reload();
         } catch (error) {
             console.error('Не удалось удалить книгу:', error);
             alert('Ошибка удаления');
@@ -392,12 +414,16 @@ async function handleDeleteBook(bookId) {
     }
 }
 
+/**
+ * Обрабатывает быстрое перемещение книги.
+ * @param {number} bookId - ID книги.
+ * @param {string} currentLocation - Текущее местоположение.
+ */
 async function handleMoveBook(bookId, currentLocation) {
     const newLocation = currentLocation === 'home' ? 'work' : 'home';
     try {
         const updatedBook = await moveBookLocation(bookId, newLocation);
 
-        // Обновляем данные локально для мгновенного отклика
         const bookInState = state.allBooksData.myLibrary.find(
             (b) => b.id === bookId
         );
@@ -424,10 +450,4 @@ function createTagList(items) {
     return items
         .map((item) => `<span class="tag-item">${item}</span>`)
         .join('');
-}
-
-// Заглушка для функции, которая будет импортирована из main.js
-// Это нужно, чтобы избежать циклических зависимостей, но при этом иметь доступ к функции
-export function setApplyFiltersAndSearch(fn) {
-    // Эта функция будет заменена реальной при инициализации
 }

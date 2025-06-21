@@ -1,0 +1,56 @@
+// Стили для пагинации и кнопки "Показать еще"
+#pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 40px;
+}
+
+.page-btn {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-weight: 500;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all var(--transition-speed);
+
+    &:hover {
+        color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    &.active {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        color: #fff;
+        cursor: default;
+    }
+}
+
+#show-more-container {
+    text-align: center;
+    margin-top: 40px;
+}
+
+#show-more-btn {
+    background-color: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 12px 30px;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all var(--transition-speed);
+
+    &:hover {
+        background-color: var(--primary-color);
+        color: #fff;
+    }
+}
