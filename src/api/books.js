@@ -26,14 +26,20 @@ router.post('/', (req, res) => {
             return res.status(500).send('Ошибка при чтении базы данных');
         }
         const db = JSON.parse(data);
-        newBook.id = Date.now();
-        db.myLibrary.push(newBook);
+
+        // Определяем, в какой список добавлять.
+        // Если книга имеет статус, она идет в библиотеку, иначе - в список желаний.
+        const targetList = newBook.status ? db.myLibrary : db.wishlist;
+
+        newBook.id = Date.now(); // Генерируем ID
+        targetList.push(newBook); // Добавляем в нужный список
+
         fs.writeFile(dbPath, JSON.stringify(db, null, 2), 'utf8', (err) => {
             if (err) {
                 console.error(err);
                 return res.status(500).send('Ошибка при сохранении книги');
             }
-            res.status(201).json(newBook);
+            res.status(201).json(newBook); // Возвращаем созданную книгу
         });
     });
 });
