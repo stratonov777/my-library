@@ -139,24 +139,30 @@ export function applyFiltersAndSearch() {
         filteredBooks.sort((a, b) => {
             switch (sortValue) {
                 case 'title-asc':
-                    return a.title.localeCompare(b.title);
+                    // Используем || '', чтобы избежать ошибки на undefined
+                    return (a.title || '').localeCompare(b.title || '');
                 case 'title-desc':
-                    return b.title.localeCompare(a.title);
+                    return (b.title || '').localeCompare(a.title || '');
                 case 'author-asc':
-                    return a.author.localeCompare(b.author);
+                    return (a.author || '').localeCompare(b.author || '');
                 case 'author-desc':
-                    return b.author.localeCompare(a.author);
+                    return (b.author || '').localeCompare(a.author || '');
                 case 'rating-desc':
                     return (b.rating?.overall || 0) - (a.rating?.overall || 0);
                 case 'rating-asc':
+                    // Книги без рейтинга (null или undefined) получают "временный" рейтинг 11.
+                    // Это делается для того, чтобы при сортировке от меньшего к большему (1, 2, 3...)
+                    // все книги без оценки оказались в самом конце списка.
                     return (
                         (a.rating?.overall || 11) - (b.rating?.overall || 11)
                     );
                 case 'date-desc':
+                    // При сортировке по убыванию, книги без даты должны быть в конце
                     return (
                         new Date(b.dateRead || 0) - new Date(a.dateRead || 0)
                     );
                 case 'date-asc':
+                    // При сортировке по возрастанию, книги без даты должны быть в конце
                     return (
                         new Date(a.dateRead || '9999-12-31') -
                         new Date(b.dateRead || '9999-12-31')
