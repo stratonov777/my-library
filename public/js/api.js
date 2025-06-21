@@ -72,7 +72,8 @@ export async function moveBookLocation(bookId, newLocation) {
  * @returns {Promise<Object>} Созданный объект книги с сервера.
  */
 export async function addBook(newBook) {
-    const response = await fetch('/api/add-book', {
+    const response = await fetch('/api/books', {
+        // <-- Измененный путь
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newBook),
