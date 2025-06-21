@@ -1,0 +1,151 @@
+// public/scss/components/_modals.scss
+
+dialog {
+    background-color: var(--surface-color);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+
+    // Стили для подложки за модальным окном
+    &::backdrop {
+        background-color: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(3px);
+    }
+}
+
+// Стили для детального просмотра
+.detail-header {
+    display: flex;
+    gap: 25px;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.detail-cover {
+    width: 150px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 5px;
+    flex-shrink: 0;
+}
+
+.detail-header-info {
+    flex-grow: 1;
+
+    h2 {
+        margin: 0;
+        font-size: 1.8rem;
+    }
+
+    h3 {
+        margin: 5px 0 15px 0;
+        font-size: 1.2rem;
+        font-weight: 400;
+        color: var(--text-secondary);
+    }
+}
+
+.series-info {
+    font-style: italic;
+    color: var(--primary-color);
+    margin-top: -10px;
+}
+
+.detail-actions-main {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.detail-section {
+    margin-bottom: 25px;
+
+    h4 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+        letter-spacing: 1px;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 5px;
+    }
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px 20px;
+
+    p {
+        margin: 5px 0;
+    }
+}
+
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 5px;
+}
+
+.tag-item {
+    background-color: rgba(0, 163, 145, 0.1);
+    color: #008175;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.detail-location-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+#move-location-btn {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+}
+
+// Стили для блока рекомендаций
+.recommendations-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+#recommendations-list {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+}
+
+.recommendation-card {
+    cursor: pointer;
+    flex: 0 0 90px;
+    text-align: center;
+    transition: opacity var(--transition-speed);
+
+    &:hover {
+        opacity: 0.8;
+    }
+
+    img {
+        width: 90px;
+        height: 130px;
+        object-fit: cover;
+        border-radius: 4px;
+        margin-bottom: 5px;
+    }
+
+    .recommendation-title {
+        font-size: 0.8rem;
+        color: var(--text-primary);
+        margin: 0;
+        line-height: 1.3;
+    }
+}

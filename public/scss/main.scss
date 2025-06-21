@@ -1,0 +1,18 @@
+// public/scss/main.scss
+
+// 1. База
+// Используем `@use`, чтобы загрузить переменные и базовые стили.
+@use 'base/variables';
+@use 'base/base';
+
+// 2. Компоненты
+// Загружаем стили для каждого компонента.
+@use 'components/buttons';
+@use 'components/cards';
+@use 'components/controls';
+@use 'components/forms';
+@use 'components/modals';
+
+// 3. Адаптивность
+// Медиа-запросы по-прежнему должны идти в самом конце.
+@use 'base/responsive';

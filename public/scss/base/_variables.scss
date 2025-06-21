@@ -1,0 +1,21 @@
+// public/scss/base/_variables.scss
+
+:root {
+    /* Цветовая палитра */
+    --bg-color: #f8f9fa;
+    --surface-color: #ffffff;
+    --primary-color: #00a391;
+    --primary-color-darker: #008274;
+    --border-color: #dee2e6;
+    --danger-color: #f5365c;
+    --text-primary: #212529;
+    --text-secondary: #6c757d;
+
+    /* Типографика */
+    --font-family: 'Inter', sans-serif;
+
+    /* Прочее */
+    --border-radius: 8px;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transition-speed: 0.2s;
+}

@@ -53,6 +53,14 @@ export async function showDetailModal(bookId, listType) {
  * @param {string} listType - Тип списка.
  */
 function renderDetailView(book, listType) {
+    const createTagList = (items) => {
+        if (!items || items.length === 0)
+            return '<p class="placeholder-inline">Нет данных</p>';
+        return items
+            .map((item) => `<span class="tag-item">${item}</span>`)
+            .join('');
+    };
+
     const recommendationsBlock =
         listType === 'library'
             ? `
@@ -170,6 +178,7 @@ function renderDetailView(book, listType) {
     document
         .getElementById('close-detail-btn')
         .addEventListener('click', () => detailDialog.close());
+    // Вот исправленная строка:
     document
         .getElementById('delete-btn')
         .addEventListener('click', () => handleDeleteBook(book.id));
@@ -361,14 +370,25 @@ async function handleSaveChanges(bookId) {
 }
 
 async function handleDeleteBook(bookId) {
-    if (!confirm('Вы уверены, что хотите удалить эту книгу?')) return;
-    try {
-        await deleteBook(bookId);
-        detailDialog.close();
-        location.reload();
-    } catch (error) {
-        console.error('Не удалось удалить книгу:', error);
-        alert('Ошибка удаления');
+    const password = '3452'; // Ваш пароль
+    const userInput = prompt('Для подтверждения удаления введите пароль:');
+
+    // Если пользователь нажал "Отмена", userInput будет null
+    if (userInput === null) {
+        return; // Прерываем операцию
+    }
+
+    if (userInput === password) {
+        try {
+            await deleteBook(bookId); // Вызываем функцию из api.js
+            detailDialog.close();
+            location.reload(); // Перезагружаем страницу, чтобы обновить список
+        } catch (error) {
+            console.error('Не удалось удалить книгу:', error);
+            alert('Ошибка удаления');
+        }
+    } else {
+        alert('Неверный пароль. Удаление отменено.');
     }
 }
 
