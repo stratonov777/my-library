@@ -119,25 +119,170 @@
         </div>
 
         <dialog id="add-book-dialog">
-            <form id="add-book-form">
+            <form id="add-book-form" class="edit-form-grid">
                 <h2>Добавить новую книгу</h2>
-                <div class="form-group">
-                    <label for="title">Название</label>
-                    <input type="text" id="title" name="title" required />
-                </div>
-                <div class="form-group">
-                    <label for="author">Автор</label>
-                    <input type="text" id="author" name="author" required />
-                </div>
-                <div class="form-group">
-                    <label for="coverImage">URL обложки</label>
-                    <input type="url" id="coverImage" name="coverImage" />
-                </div>
-                <div class="form-group">
-                    <label for="tags">Теги (через запятую)</label>
-                    <input type="text" id="tags" name="tags" />
-                </div>
-                <div class="form-actions">
+
+                <fieldset class="wide">
+                    <legend>Основная информация</legend>
+                    <div class="form-group">
+                        <label for="add-title">Название</label>
+                        <input
+                            type="text"
+                            id="add-title"
+                            name="title"
+                            required
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="add-author">Автор</label>
+                        <input
+                            type="text"
+                            id="add-author"
+                            name="author"
+                            required
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="add-coverImage">URL обложки</label>
+                        <input
+                            type="url"
+                            id="add-coverImage"
+                            name="coverImage"
+                        />
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Формат и Владение</legend>
+                    <div class="form-group">
+                        <label>Формат</label>
+                        <div class="radio-group">
+                            <label
+                                ><input
+                                    type="radio"
+                                    name="format"
+                                    value="physical"
+                                    checked
+                                />
+                                Физическая</label
+                            >
+                            <label
+                                ><input
+                                    type="radio"
+                                    name="format"
+                                    value="ebook"
+                                />
+                                Электронная</label
+                            >
+                            <label
+                                ><input
+                                    type="radio"
+                                    name="format"
+                                    value="audiobook"
+                                />
+                                Аудиокнига</label
+                            >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label
+                            ><input
+                                type="checkbox"
+                                id="add-isOwned"
+                                name="isOwned"
+                                checked
+                            />
+                            В моей собственности</label
+                        >
+                    </div>
+                </fieldset>
+
+                <fieldset id="location-fieldset">
+                    <legend>Местоположение</legend>
+                    <div class="form-group">
+                        <div class="radio-group" id="location-radio-group">
+                            <label
+                                ><input
+                                    type="radio"
+                                    name="locationType"
+                                    value="home"
+                                    checked
+                                />
+                                Дома</label
+                            >
+                            <label
+                                ><input
+                                    type="radio"
+                                    name="locationType"
+                                    value="work"
+                                />
+                                На работе</label
+                            >
+                            <label
+                                ><input
+                                    type="radio"
+                                    name="locationType"
+                                    value="lent"
+                                />
+                                Дал почитать</label
+                            >
+                        </div>
+                    </div>
+                    <div id="lent-to-fields-container" style="display: none">
+                        <div class="form-group">
+                            <label for="add-lent-to">Кому выдана</label>
+                            <input type="text" id="add-lent-to" name="lentTo" />
+                        </div>
+                        <div class="form-group">
+                            <label for="add-lent-contact"
+                                >Контакт (тел./соцсеть)</label
+                            >
+                            <input
+                                type="text"
+                                id="add-lent-contact"
+                                name="lentContact"
+                            />
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="wide">
+                    <legend>Библиография и LiveLib</legend>
+                    <div class="form-group">
+                        <label for="add-publisher">Издательство</label>
+                        <input
+                            type="text"
+                            id="add-publisher"
+                            name="publisher"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="add-publicationYear">Год издания</label>
+                        <input
+                            type="number"
+                            id="add-publicationYear"
+                            name="publicationYear"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="add-livelib-rating">Рейтинг LiveLib</label>
+                        <input
+                            type="text"
+                            id="add-livelib-rating"
+                            name="livelibRating"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="add-livelib-url">URL на LiveLib</label>
+                        <input
+                            type="url"
+                            id="add-livelib-url"
+                            name="livelibUrl"
+                        />
+                    </div>
+                </fieldset>
+
+                <div class="form-actions wide">
                     <button type="submit" class="btn">Сохранить</button>
                     <button
                         type="button"

@@ -249,5 +249,43 @@ async function initApp() {
     }
 }
 
+// --- Логика для динамической формы добавления книги ---
+
+function initializeAddForm() {
+    const formatRadios = document.querySelectorAll('input[name="format"]');
+    const locationFieldset = document.getElementById('location-fieldset');
+    const locationRadios = document.querySelectorAll(
+        'input[name="locationType"]'
+    );
+    const lentToFieldsContainer = document.getElementById(
+        'lent-to-fields-container'
+    );
+
+    // Скрывать/показывать блок "Местоположение" в зависимости от формата
+    formatRadios.forEach((radio) => {
+        radio.addEventListener('change', () => {
+            if (radio.value === 'physical') {
+                locationFieldset.style.display = 'block';
+            } else {
+                locationFieldset.style.display = 'none';
+            }
+        });
+    });
+
+    // Скрывать/показывать поля для выданной книги
+    locationRadios.forEach((radio) => {
+        radio.addEventListener('change', () => {
+            if (radio.value === 'lent') {
+                lentToFieldsContainer.style.display = 'block';
+            } else {
+                lentToFieldsContainer.style.display = 'none';
+            }
+        });
+    });
+}
+
+// Вызовем эту функцию после того, как все загрузится
+document.addEventListener('DOMContentLoaded', initializeAddForm);
+
 // --- Запуск приложения ---
 initApp();

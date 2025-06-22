@@ -53,3 +53,20 @@
         grid-column: 1 / -1;
     }
 }
+
+// Стили для групп радиокнопок и чекбоксов
+.radio-group {
+    display: flex;
+    gap: 15px; // Расстояние между кнопками
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.radio-group label,
+.form-group > label[for^='add-isOwned'] {
+    // Стили для label у чекбокса тоже
+    display: flex;
+    align-items: center;
+    gap: 5px; // Расстояние между кнопкой и текстом
+    font-weight: 400; // Обычный вес шрифта для опций
+}

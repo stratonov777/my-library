@@ -388,6 +388,21 @@ header .header-center {
   grid-column: 1/-1;
 }
 
+.radio-group {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.radio-group label,
+.form-group > label[for^=add-isOwned] {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 400;
+}
+
 dialog {
   background-color: var(--surface-color);
   color: var(--text-primary);
