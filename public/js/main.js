@@ -1,7 +1,7 @@
 // public/js/main.js
-
 import { state, updateState } from './state.js';
-import { fetchAllBooks } from './api.js';
+// Просто добавь addBook в этот список
+import { fetchAllBooks, addBook } from './api.js';
 import { renderBooks } from './ui/bookCards.js';
 import { showDetailModal } from './ui/modals.js';
 
@@ -230,8 +230,97 @@ function setupEventListeners() {
     cancelAddBtn.addEventListener('click', () => addDialog.close());
 
     addBookForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        alert('Форма добавления будет обновлена в следующем шаге!');
+        event.preventDefault(); // Предотвращаем стандартную отправку формы
+
+        // --- 1. Собираем данные из всех полей ---
+        const newBook = {
+            // Основная информация
+            title: document.getElementById('add-title').value,
+            author: document.getElementById('add-author').value,
+            coverImage: document.getElementById('add-coverImage').value,
+
+            // Формат и владение
+            format: document.querySelector('input[name="format"]:checked')
+                .value,
+            isOwned: document.getElementById('add-isOwned').checked,
+
+            // Библиография и LiveLib
+            publisher: document.getElementById('add-publisher').value,
+            publicationYear:
+                parseInt(
+                    document.getElementById('add-publicationYear').value
+                ) || null,
+            livelib: {
+                rating:
+                    parseFloat(
+                        document.getElementById('add-livelib-rating').value
+                    ) || null,
+                url: document.getElementById('add-livelib-url').value,
+            },
+
+            // Обнуляем поля, которые заполняются при чтении
+            rating: {
+                overall: null,
+                plot: null,
+                characters: null,
+                worldBuilding: null,
+                prose: null,
+            },
+            myNotes: '',
+            dateRead: null,
+
+            // Поля-заглушки для полной совместимости
+            series: null,
+            publisherSeries: '',
+            genre: '',
+            tags: [],
+            keyThemes: [],
+            ai_template: {},
+        };
+
+        // --- 2. Собираем объект location в зависимости от выбора ---
+        const format = newBook.format;
+        if (format === 'physical') {
+            const locationType = document.querySelector(
+                'input[name="locationType"]:checked'
+            ).value;
+
+            if (locationType === 'lent') {
+                newBook.location = {
+                    type: 'lent',
+                    to: document.getElementById('add-lent-to').value,
+                    contact: document.getElementById('add-lent-contact').value,
+                };
+            } else {
+                newBook.location = {
+                    type: locationType, // 'home' или 'work'
+                    to: null,
+                    contact: null,
+                };
+            }
+        } else {
+            newBook.location = null; // У нефизических книг нет местоположения
+        }
+
+        // --- 3. Отправляем книгу на сервер ---
+        try {
+            console.log('Отправляем на сервер:', newBook); // Полезно для отладки
+
+            // Важно: мы предполагаем, что функция addBook в api.js уже исправлена
+            await addBook(newBook);
+
+            addDialog.close(); // Закрываем модальное окно
+            addBookForm.reset(); // Очищаем форму
+
+            // Простой способ обновить список - перезагрузить страницу
+            // В будущем можно будет заменить на "умное" обновление
+            location.reload();
+        } catch (error) {
+            console.error('Ошибка при добавлении книги:', error);
+            alert(
+                'Не удалось добавить книгу. Проверьте консоль на наличие ошибок.'
+            );
+        }
     });
 }
 

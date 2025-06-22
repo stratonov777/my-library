@@ -22,24 +22,36 @@ router.post('/', (req, res) => {
     const newBook = req.body;
     fs.readFile(dbPath, 'utf8', (err, data) => {
         if (err) {
-            console.error(err);
-            return res.status(500).send('Ошибка при чтении базы данных');
+            console.error('Ошибка чтения файла:', err);
+            return res
+                .status(500)
+                .send('Ошибка на сервере при чтении базы данных');
         }
-        const db = JSON.parse(data);
 
-        // Определяем, в какой список добавлять.
-        // Если книга имеет статус, она идет в библиотеку, иначе - в список желаний.
-        const targetList = newBook.status ? db.myLibrary : db.wishlist;
+        let db;
+        try {
+            // Оборачиваем парсинг в try...catch, чтобы отловить ошибки в JSON
+            db = JSON.parse(data);
+        } catch (parseError) {
+            console.error('Ошибка парсинга JSON:', parseError);
+            // Отправляем осмысленную ошибку, если JSON некорректен
+            return res
+                .status(500)
+                .send('База данных повреждена (некорректный JSON).');
+        }
 
-        newBook.id = Date.now(); // Генерируем ID
-        targetList.push(newBook); // Добавляем в нужный список
+        newBook.id = Date.now();
+
+        // Добавляем книгу в массив myLibrary (пока по умолчанию)
+        if (!db.myLibrary) db.myLibrary = [];
+        db.myLibrary.push(newBook);
 
         fs.writeFile(dbPath, JSON.stringify(db, null, 2), 'utf8', (err) => {
             if (err) {
-                console.error(err);
+                console.error('Ошибка при сохранении книги:', err);
                 return res.status(500).send('Ошибка при сохранении книги');
             }
-            res.status(201).json(newBook); // Возвращаем созданную книгу
+            res.status(201).json(newBook);
         });
     });
 });
