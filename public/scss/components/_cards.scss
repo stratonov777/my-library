@@ -1,24 +1,39 @@
 // public/scss/components/_cards.scss
 
+/**
+ * ===================================================================
+ * | _cards.scss: Стили для карточек книг                            |
+ * ===================================================================
+ * Этот файл определяет внешний вид сетки, в которой отображаются
+ * все книги, а также стили для каждой отдельной карточки.
+ */
+
+// Контейнер для всех карточек книг.
+// Используем CSS Grid для создания адаптивной сетки.
 #book-list-container {
     display: grid;
+    // `repeat(auto-fill, minmax(240px, 1fr))` — мощная инструкция, которая говорит:
+    // "Создавай столько колонок, сколько поместится, но каждая должна быть
+    // не меньше 240px в ширину. Оставшееся пространство распредели поровну".
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 30px;
+    gap: 30px; // Отступ между карточками.
     max-width: 1400px;
-    margin: 0 auto;
+    margin: 0 auto; // Центрируем контейнер на странице.
 }
 
+// Стили для отдельной карточки книги.
 .book-card {
-    position: relative; // Необходимо для позиционирования значка
+    position: relative; // Необходимо для абсолютного позиционирования значков внутри.
     background-color: var(--surface-color);
     border-radius: var(--border-radius);
-    overflow: hidden;
+    overflow: hidden; // Обрезаем все, что выходит за скругленные углы.
     transition: transform var(--transition-speed),
         box-shadow var(--transition-speed);
     cursor: pointer;
     border: 1px solid var(--border-color);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 
+    // Эффект "приподнимания" карточки при наведении.
     &:hover {
         transform: translateY(-5px);
         box-shadow: var(--box-shadow);
@@ -26,45 +41,66 @@
     }
 }
 
+// Обложка книги.
 .book-cover {
     width: 100%;
     height: 350px;
-    object-fit: cover;
-    display: block;
+    object-fit: cover; // Гарантирует, что изображение заполнит блок, сохранив пропорции.
+    display: block; // Убирает лишний отступ под изображением.
     border-bottom: 1px solid var(--border-color);
 }
 
+// Контейнер для текстовой информации под обложкой.
 .book-info {
     padding: 15px;
 }
 
+// Заголовок книги.
 .book-title {
     font-size: 1rem;
     font-weight: 700;
     margin: 0 0 5px 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: nowrap; // Текст не переносится на новую строку.
+    overflow: hidden; // Все, что не помещается, обрезается.
+    text-overflow: ellipsis; // В конце обрезанного текста ставится троеточие.
 }
 
+// Автор книги.
 .book-author {
     font-size: 0.9rem;
     color: var(--text-secondary);
     margin: 0 0 10px 0;
 }
 
+// Нижняя строка с мета-информацией (рейтинги, значки).
 .book-meta {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    min-height: 2em; // Гарантирует высоту, даже если нет оценок.
     font-size: 0.8rem;
+    gap: 5px;
 }
 
-.book-rating {
-    color: var(--text-secondary);
-    font-weight: 500;
+// Общий стиль для оценок и значка в .book-meta
+.book-meta .book-rating,
+.book-meta .book-card-badge {
+    flex-basis: 33.33%; // Каждому элементу даем равную долю пространства.
 }
 
+// Персональные стили для выравнивания каждого элемента в ряду
+.book-meta .my-rating {
+    text-align: left;
+}
+.book-meta .book-card-badge {
+    text-align: center;
+    font-size: 1.4rem;
+}
+.book-meta .livelib {
+    text-align: right;
+}
+
+// Устаревший класс, оставлен для обратной совместимости, если где-то используется.
 .book-status {
     padding: 4px 8px;
     border-radius: 4px;
@@ -73,33 +109,16 @@
     color: var(--primary-color);
 }
 
-.book-card-location {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(2px);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    font-size: 1.2rem;
-    color: var(--text-primary);
-}
-
+// Плейсхолдер для книг без обложки (электронные, аудио).
 .book-cover-placeholder {
     width: 100%;
-    height: 350px; /* Та же высота, что и у обычной обложки */
+    height: 350px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
     color: #fff;
-    font-family: var(--font-header);
     border-bottom: 1px solid var(--border-color);
 
     h3 {

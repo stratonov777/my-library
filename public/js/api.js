@@ -1,6 +1,18 @@
 // public/js/api.js
 
 /**
+ * ===================================================================
+ * | api.js: Модуль для взаимодействия с серверным API               |
+ * ===================================================================
+ * * Назначение:
+ * Этот файл инкапсулирует всю сетевую логику приложения. Он содержит
+ * набор асинхронных функций, каждая из которых соответствует
+ * определенной конечной точке (endpoint) на бэкенде.
+ * Такой подход позволяет изолировать работу с сетью от остальной
+ * логики приложения.
+ */
+
+/**
  * Запрашивает с сервера полный список книг.
  * @returns {Promise<Object>} Объект с массивами myLibrary и wishlist.
  */
@@ -79,5 +91,24 @@ export async function addBook(newBook) {
         body: JSON.stringify(newBook),
     });
     if (!response.ok) throw new Error('Сервер не смог добавить книгу');
+    return response.json();
+}
+
+/**
+ * Отправляет на сервер запрос на возврат книги.
+ * @param {number} bookId - ID возвращаемой книги.
+ * @param {string} returnTo - Новое местоположение ('home' или 'work').
+ * @returns {Promise<Object>} Обновленный объект книги с сервера.
+ */
+export async function returnBook(bookId, returnTo) {
+    const response = await fetch(`/api/books/${bookId}/return`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ returnTo: returnTo }),
+    });
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Ошибка при возврате книги: ${errorText}`);
+    }
     return response.json();
 }

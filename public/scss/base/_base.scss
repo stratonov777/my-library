@@ -1,15 +1,37 @@
 // public/scss/base/_base.scss
 
+/**
+ * ===================================================================
+ * | _base.scss: Глобальные стили и CSS-сброс                         |
+ * ===================================================================
+ * Этот файл содержит базовые стили, которые применяются ко всему
+ * документу. Сюда входят стили для тега <body>, заголовков,
+ * а также полезные CSS-сбросы.
+ */
+
+// Универсальный CSS-сброс.
+// `box-sizing: border-box` — это лучшая практика в современной верстке.
+// Она гарантирует, что внутренние отступы (padding) и рамки (border)
+// не будут увеличивать итоговую ширину и высоту элемента.
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+// Стили для основного тела документа
 body {
     background-color: var(--bg-color);
     color: var(--text-primary);
     font-family: var(--font-family);
-    margin: 0;
-    padding: 40px;
+    margin: 0; // Сбрасываем стандартные отступы браузера
+    padding: 0; // На всякий случай сбрасываем и padding
+    // Сглаживание шрифтов для лучшего отображения на разных ОС
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
+// Общие стили для всех заголовков
 h1,
 h2,
 h3,
@@ -18,8 +40,10 @@ h5,
 h6 {
     font-weight: 700;
     color: var(--text-primary);
+    margin-top: 0; // Хорошая практика - сбрасывать верхний отступ у заголовков
 }
 
+// Стили для шапки (если она будет использоваться)
 header {
     display: flex;
     justify-content: space-between;
@@ -32,21 +56,21 @@ header {
     }
 
     .header-side {
-        flex: 1; // Занимает равное пространство
+        flex: 1;
         display: flex;
 
         &:last-child {
-            justify-content: flex-end; // Прижимает кнопку к правому краю
+            justify-content: flex-end;
         }
     }
 
     .header-center {
-        flex: 2; // Даем центральной части больше места
+        flex: 2;
         text-align: center;
     }
 }
 
-// Стили для плейсхолдеров
+// Стили для вспомогательных классов-плейсхолдеров
 .placeholder {
     color: var(--text-secondary);
 }

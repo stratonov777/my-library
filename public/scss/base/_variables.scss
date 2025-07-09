@@ -1,13 +1,15 @@
 // public/scss/base/_variables.scss
 
+// :root — это селектор, который представляет корневой элемент документа (<html>).
+// Переменные, объявленные здесь, становятся глобальными CSS-переменными.
 :root {
     /* Цветовая палитра */
     --bg-color: #f8f9fa;
     --surface-color: #ffffff;
-    --primary-color: #00a391;
-    --primary-color-darker: #008274;
+    --primary-color: #00a391; // Основной акцентный цвет
+    --primary-color-darker: #008274; // Для состояний :hover
     --border-color: #dee2e6;
-    --danger-color: #f5365c;
+    --danger-color: #f5365c; // Для кнопок удаления
     --text-primary: #212529;
     --text-secondary: #6c757d;
 
@@ -15,7 +17,9 @@
     --font-family: 'Inter', sans-serif;
 
     /* Прочее */
-    --border-radius: 8px;
-    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --transition-speed: 0.2s;
+    --border-radius: 8px; // Единый радиус скругления для всех элементов
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Единая тень
+    --transition-speed: 0.2s; // Единая скорость для всех анимаций
 }
+// Примечание: Использование CSS-переменных позволяет легко менять тему,
+// добавлять тёмную тему и т.д. Просто меняйте значения в одном месте.

@@ -1,4 +1,12 @@
 @charset "UTF-8";
+/**
+ * ===================================================================
+ * | Главный файл стилей (точка сборки)                              |
+ * ===================================================================
+ * Этот файл не содержит стилей напрямую. Его задача — импортировать
+ * все остальные SCSS-файлы (partials) в правильном порядке.
+ * Порядок импорта критически важен.
+ */
 :root {
   /* Цветовая палитра */
   --bg-color: #f8f9fa;
@@ -17,12 +25,26 @@
   --transition-speed: 0.2s;
 }
 
+/**
+ * ===================================================================
+ * | _base.scss: Глобальные стили и CSS-сброс                         |
+ * ===================================================================
+ * Этот файл содержит базовые стили, которые применяются ко всему
+ * документу. Сюда входят стили для тега <body>, заголовков,
+ * а также полезные CSS-сбросы.
+ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
   background-color: var(--bg-color);
   color: var(--text-primary);
   font-family: var(--font-family);
   margin: 0;
-  padding: 40px;
+  padding: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -35,6 +57,7 @@ h5,
 h6 {
   font-weight: 700;
   color: var(--text-primary);
+  margin-top: 0;
 }
 
 header {
@@ -68,6 +91,13 @@ header .header-center {
   font-style: italic;
 }
 
+/**
+ * ===================================================================
+ * | _layout.scss: Стили для основных блоков макета                  |
+ * ===================================================================
+ * Этот файл определяет структуру расположения главных элементов
+ * приложения: боковой панели и области контента.
+ */
 .main-layout {
   display: flex;
   min-height: 100vh;
@@ -105,14 +135,14 @@ header .header-center {
 }
 
 .controls-group {
-  margin-bottom: 25px;
+  margin-bottom: 18px;
 }
 .controls-group label {
   display: block;
   font-weight: 500;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 .controls-group select,
 .controls-group input,
@@ -125,6 +155,28 @@ header .header-center {
   gap: 8px;
 }
 
+.menu-toggle-btn {
+  display: none;
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1001;
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  width: 45px;
+  height: 45px;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/**
+ * ===================================================================
+ * | _buttons.scss: Стили для всех кнопок в приложении                |
+ * ===================================================================
+ * Этот файл содержит стили для всех интерактивных кнопок,
+ * включая основные кнопки действий и кнопки фильтрации.
+ */
 .btn {
   background-color: var(--primary-color);
   color: #fff;
@@ -181,8 +233,16 @@ header .header-center {
   background-color: var(--primary-color);
   border-color: var(--primary-color);
   color: #fff;
+  cursor: default;
 }
 
+/**
+ * ===================================================================
+ * | _cards.scss: Стили для карточек книг                            |
+ * ===================================================================
+ * Этот файл определяет внешний вид сетки, в которой отображаются
+ * все книги, а также стили для каждой отдельной карточки.
+ */
 #book-list-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -238,12 +298,27 @@ header .header-center {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  min-height: 2em;
   font-size: 0.8rem;
+  gap: 5px;
 }
 
-.book-rating {
-  color: var(--text-secondary);
-  font-weight: 500;
+.book-meta .book-rating,
+.book-meta .book-card-badge {
+  flex-basis: 33.33%;
+}
+
+.book-meta .my-rating {
+  text-align: left;
+}
+
+.book-meta .book-card-badge {
+  text-align: center;
+  font-size: 1.4rem;
+}
+
+.book-meta .livelib {
+  text-align: right;
 }
 
 .book-status {
@@ -254,33 +329,15 @@ header .header-center {
   color: var(--primary-color);
 }
 
-.book-card-location {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(2px);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  font-size: 1.2rem;
-  color: var(--text-primary);
-}
-
 .book-cover-placeholder {
   width: 100%;
-  height: 350px; /* Та же высота, что и у обычной обложки */
+  height: 350px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
   color: #fff;
-  font-family: var(--font-header);
   border-bottom: 1px solid var(--border-color);
 }
 .book-cover-placeholder h3 {
@@ -291,6 +348,13 @@ header .header-center {
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+/**
+ * ===================================================================
+ * | _controls.scss: Стили для отдельных элементов управления        |
+ * ===================================================================
+ * Этот файл содержит стили для специфических элементов управления,
+ * таких как поле поиска, и для кастомных контейнеров с контролами.
+ */
 .list-controls {
   max-width: 1400px;
   margin: 0 auto 40px auto;
@@ -340,6 +404,14 @@ header .header-center {
   box-shadow: 0 0 0 4px rgba(0, 163, 145, 0.1);
 }
 
+/**
+ * ===================================================================
+ * | _forms.scss: Стили для элементов форм                           |
+ * ===================================================================
+ * Этот файл содержит все стили, связанные с формами: полями ввода,
+ * выпадающими списками, текстовыми областями, а также их
+ * структурными контейнерами.
+ */
 .form-group input,
 .form-group select,
 .form-group textarea {
@@ -349,6 +421,7 @@ header .header-center {
   width: 100%;
   padding: 12px;
   border-radius: var(--border-radius);
+  transition: all var(--transition-speed);
 }
 .form-group input:focus,
 .form-group select:focus,
@@ -379,7 +452,6 @@ header .header-center {
   gap: 15px;
 }
 .edit-form-grid legend {
-  font-family: var(--font-header);
   font-weight: 500;
   padding: 0 10px;
   color: var(--text-secondary);
@@ -403,12 +475,22 @@ header .header-center {
   font-weight: 400;
 }
 
+/**
+ * ===================================================================
+ * | _modals.scss: Стили для модальных окон                          |
+ * ===================================================================
+ */
 dialog {
   background-color: var(--surface-color);
   color: var(--text-primary);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+dialog[id=detail-dialog] {
+  max-width: 800px;
+  width: 90%;
+  margin: auto;
 }
 dialog::backdrop {
   background-color: rgba(0, 0, 0, 0.4);
@@ -433,13 +515,20 @@ dialog::backdrop {
 
 .detail-header-info {
   flex-grow: 1;
+  min-width: 0;
+}
+.detail-header-info h2,
+.detail-header-info h3 {
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .detail-header-info h2 {
-  margin: 0;
   font-size: 1.8rem;
 }
 .detail-header-info h3 {
-  margin: 5px 0 15px 0;
+  margin-bottom: 15px;
   font-size: 1.2rem;
   font-weight: 400;
   color: var(--text-secondary);
@@ -480,34 +569,14 @@ dialog::backdrop {
   margin: 5px 0;
 }
 
-.tag-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 5px;
-}
-
-.tag-item {
-  background-color: rgba(0, 163, 145, 0.1);
-  color: #008175;
-  padding: 5px 10px;
-  border-radius: 15px;
-  font-size: 0.85rem;
-  font-weight: 500;
-}
-
 .detail-location-wrapper {
   display: flex;
   align-items: center;
   gap: 15px;
+  margin-top: 10px;
 }
 
-#move-location-btn {
-  font-size: 0.8rem;
-  padding: 5px 10px;
-}
-
-.recommendations-section {
+#recommendations-container {
   margin-top: 30px;
   padding-top: 20px;
   border-top: 1px solid var(--border-color);
@@ -542,6 +611,35 @@ dialog::backdrop {
   line-height: 1.3;
 }
 
+.collapsible-text {
+  max-height: 70px;
+  overflow: hidden;
+  position: relative;
+  transition: max-height 0.3s ease-out;
+}
+
+.collapsible-text.expanded {
+  max-height: 1000px;
+  transition: max-height 0.5s ease-in;
+}
+
+.show-more-btn {
+  margin-top: 5px;
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  cursor: pointer;
+  font-weight: bold;
+  padding: 0;
+}
+
+/**
+ * ===================================================================
+ * | _pagination.scss: Стили для пагинации и кнопки "Показать еще"   |
+ * ===================================================================
+ * Этот файл содержит стили для всех элементов, связанных с навигацией
+ * по страницам каталога книг.
+ */
 #pagination-container {
   display: flex;
   justify-content: center;
@@ -595,24 +693,48 @@ dialog::backdrop {
   color: #fff;
 }
 
+/**
+ * ===================================================================
+ * | _responsive.scss: Стили для адаптивного дизайна                 |
+ * ===================================================================
+ * Этот файл содержит все медиа-запросы, которые адаптируют макет
+ * для различных размеров экрана (планшеты, мобильные телефоны).
+ * Он импортируется в main.scss последним, чтобы его правила имели
+ * наивысший приоритет.
+ */
 @media (max-width: 768px) {
   body {
     padding: 20px;
   }
-  header {
-    flex-direction: column;
-    gap: 20px;
-    margin-bottom: 30px;
+  .menu-toggle-btn {
+    display: block;
   }
-  #book-list-container {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
   }
-  .book-cover {
-    height: 280px;
+  .sidebar.is-open {
+    transform: translateX(0);
+  }
+  .content {
+    padding: 20px;
+    padding-top: 70px;
   }
   .edit-form-grid {
     grid-template-columns: 1fr;
+  }
+  #book-list-container {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 15px;
+  }
+  .book-cover {
+    height: 200px;
   }
 }
 @media (max-width: 480px) {

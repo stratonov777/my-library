@@ -1,6 +1,18 @@
 // public/js/main.js
+
+/**
+ * ===================================================================
+ * | main.js: Главный управляющий файл приложения ("Дирижер")        |
+ * ===================================================================
+ * * Назначение:
+ * Этот файл является точкой входа для всей логики фронтенда.
+ * Его задачи:
+ * 1. Импортировать все необходимые модули.
+ * 2. Инициализировать приложение при загрузке страницы.
+ * 3. Устанавливать глобальные обработчики событий, связывающие модули.
+ */
+
 import { state, updateState } from './state.js';
-// Просто добавь addBook в этот список
 import { fetchAllBooks, addBook } from './api.js';
 import { renderBooks } from './ui/bookCards.js';
 import { showDetailModal } from './ui/modals.js';
@@ -13,16 +25,18 @@ const addBookBtn = document.getElementById('add-book-btn');
 const addDialog = document.getElementById('add-book-dialog');
 const cancelAddBtn = document.getElementById('cancel-btn');
 const addBookForm = document.getElementById('add-book-form');
-// Исправленный список констант для фильтров
 const authorFilter = document.getElementById('author-filter');
 const genreFilter = document.getElementById('genre-filter');
 const authorSeriesFilter = document.getElementById('author-series-filter');
+const formatFilter = document.getElementById('format-filter');
+const locationFilter = document.getElementById('location-filter');
+const menuToggleBtn = document.getElementById('menu-toggle-btn');
+const sidebar = document.querySelector('.sidebar');
 const publisherSeriesFilter = document.getElementById(
     'publisher-series-filter'
 );
 
 // --- Логика пагинации ---
-
 function displayPage(pageNumber, append = false) {
     updateState({ currentPage: pageNumber });
     const startIndex = (state.currentPage - 1) * state.booksPerPage;
@@ -87,59 +101,75 @@ function updatePaginationUI() {
 
 // --- Главная функция фильтрации, поиска и сортировки ---
 export function applyFiltersAndSearch() {
-    let filteredBooks = [];
-
+    // --- Шаг 1: Определяем базовый набор книг ---
+    let workingSet = [];
     if (state.activeFilter === 'my-library') {
-        filteredBooks = [...state.allBooksData.myLibrary];
+        workingSet = [...state.allBooksData.myLibrary];
     } else if (state.activeFilter === 'to-read') {
-        filteredBooks = state.allBooksData.myLibrary.filter(
+        workingSet = state.allBooksData.myLibrary.filter(
             (book) => book.status === 'to-read'
         );
     } else if (state.activeFilter === 'wishlist') {
-        filteredBooks = [...state.allBooksData.wishlist];
+        workingSet = [...state.allBooksData.wishlist];
     }
 
-    const selectedAuthor = authorFilter.value;
-    const selectedGenre = genreFilter.value;
-    const selectedAuthorSeries = authorSeriesFilter.value;
-    const selectedPublisherSeries = publisherSeriesFilter.value;
+    // --- Шаг 2: Последовательно применяем все фильтры ---
 
-    if (selectedAuthor !== 'all') {
-        filteredBooks = filteredBooks.filter(
-            (book) => book.author === selectedAuthor
-        );
-    }
-    if (selectedGenre !== 'all') {
-        filteredBooks = filteredBooks.filter(
-            (book) => book.genre === selectedGenre
-        );
-    }
-    if (selectedAuthorSeries !== 'all') {
-        filteredBooks = filteredBooks.filter(
-            (book) => book.series?.name === selectedAuthorSeries
-        );
-    }
-    if (selectedPublisherSeries !== 'all') {
-        filteredBooks = filteredBooks.filter(
-            (book) => book.publisherSeries === selectedPublisherSeries
+    // Функция-помощник для фильтрации, чтобы не дублировать код
+    const applySelectFilter = (key, selectedValue) => {
+        if (selectedValue !== 'all') {
+            workingSet = workingSet.filter((book) => {
+                if (key === 'series') {
+                    return book.series?.name === selectedValue;
+                }
+                return book[key] === selectedValue;
+            });
+        }
+    };
+
+    applySelectFilter('author', authorFilter.value);
+    applySelectFilter('genre', genreFilter.value);
+    applySelectFilter('series', authorSeriesFilter.value);
+    applySelectFilter('publisherSeries', publisherSeriesFilter.value);
+
+    if (formatFilter.value !== 'all') {
+        workingSet = workingSet.filter(
+            (book) => book.format === formatFilter.value
         );
     }
 
+    // Отдельная логика для фильтра по местоположению
+    if (locationFilter.value !== 'all') {
+        workingSet = workingSet.filter((book) => {
+            if (book.format !== 'physical' || !book.location) return false;
+            const type =
+                typeof book.location === 'object'
+                    ? book.location.type
+                    : book.location;
+            return type === locationFilter.value;
+        });
+    }
+
+    // --- Шаг 3: Перерисовываем фильтры на основе отфильтрованных книг ---
+    // Это и есть магия "каскадных" фильтров!
+    populateFilterDropdowns(workingSet);
+
+    // --- Шаг 4: Применяем текстовый поиск к тому, что осталось ---
     const searchQuery = searchInput.value.toLowerCase().trim();
     if (searchQuery) {
-        filteredBooks = filteredBooks.filter(
+        workingSet = workingSet.filter(
             (book) =>
                 book.title?.toLowerCase().includes(searchQuery) ||
                 book.author?.toLowerCase().includes(searchQuery)
         );
     }
 
+    // --- Шаг 5: Сортируем финальный результат ---
     const sortValue = sortSelect.value;
     if (sortValue !== 'default') {
-        filteredBooks.sort((a, b) => {
+        workingSet.sort((a, b) => {
             switch (sortValue) {
                 case 'title-asc':
-                    // Используем || '', чтобы избежать ошибки на undefined
                     return (a.title || '').localeCompare(b.title || '');
                 case 'title-desc':
                     return (b.title || '').localeCompare(a.title || '');
@@ -150,19 +180,14 @@ export function applyFiltersAndSearch() {
                 case 'rating-desc':
                     return (b.rating?.overall || 0) - (a.rating?.overall || 0);
                 case 'rating-asc':
-                    // Книги без рейтинга (null или undefined) получают "временный" рейтинг 11.
-                    // Это делается для того, чтобы при сортировке от меньшего к большему (1, 2, 3...)
-                    // все книги без оценки оказались в самом конце списка.
                     return (
                         (a.rating?.overall || 11) - (b.rating?.overall || 11)
                     );
                 case 'date-desc':
-                    // При сортировке по убыванию, книги без даты должны быть в конце
                     return (
                         new Date(b.dateRead || 0) - new Date(a.dateRead || 0)
                     );
                 case 'date-asc':
-                    // При сортировке по возрастанию, книги без даты должны быть в конце
                     return (
                         new Date(a.dateRead || '9999-12-31') -
                         new Date(b.dateRead || '9999-12-31')
@@ -173,26 +198,37 @@ export function applyFiltersAndSearch() {
         });
     }
 
-    updateState({ currentlyDisplayedBooks: filteredBooks });
+    // --- Шаг 6: Обновляем состояние и отображаем результат ---
+    updateState({ currentlyDisplayedBooks: workingSet });
     displayPage(1, false);
 }
 
 // --- Инициализация и обработчики событий ---
+function populateFilterDropdowns(books, forceUpdate = false) {
+    // Сохраняем текущие значения, чтобы не сбрасывать выбор пользователя
+    const selected = {
+        author: authorFilter.value,
+        genre: genreFilter.value,
+        authorSeries: authorSeriesFilter.value,
+        publisherSeries: publisherSeriesFilter.value,
+    };
 
-function populateFilterDropdowns(books) {
     const authors = new Set();
     const genres = new Set();
     const authorSeries = new Set();
     const publisherSeries = new Set();
 
+    // Собираем уникальные значения из ПЕРЕДАННОГО списка книг
     books.forEach((book) => {
         if (book.author) authors.add(book.author);
         if (book.genre) genres.add(book.genre);
-        if (book.series && book.series.name) authorSeries.add(book.series.name);
+        if (book.series?.name) authorSeries.add(book.series.name);
         if (book.publisherSeries) publisherSeries.add(book.publisherSeries);
     });
 
-    const populate = (selectElement, items) => {
+    // Вспомогательная функция для перерисовки одного <select>
+    const populate = (selectElement, items, selectedValue) => {
+        selectElement.innerHTML = `<option value="all">Все</option>`; // Начинаем с чистого списка
         const sortedItems = [...items].sort((a, b) => a.localeCompare(b));
         sortedItems.forEach((item) => {
             const option = document.createElement('option');
@@ -200,12 +236,17 @@ function populateFilterDropdowns(books) {
             option.textContent = item;
             selectElement.appendChild(option);
         });
+        // Восстанавливаем выбор пользователя
+        if (items.has(selectedValue)) {
+            selectElement.value = selectedValue;
+        }
     };
 
-    populate(authorFilter, authors);
-    populate(genreFilter, genres);
-    populate(authorSeriesFilter, authorSeries);
-    populate(publisherSeriesFilter, publisherSeries);
+    // Перерисовываем каждый фильтр
+    populate(authorFilter, authors, selected.author);
+    populate(genreFilter, genres, selected.genre);
+    populate(authorSeriesFilter, authorSeries, selected.authorSeries);
+    populate(publisherSeriesFilter, publisherSeries, selected.publisherSeries);
 }
 
 function setupEventListeners() {
@@ -225,9 +266,15 @@ function setupEventListeners() {
     genreFilter.addEventListener('change', applyFiltersAndSearch);
     authorSeriesFilter.addEventListener('change', applyFiltersAndSearch);
     publisherSeriesFilter.addEventListener('change', applyFiltersAndSearch);
+    locationFilter.addEventListener('change', applyFiltersAndSearch);
+    formatFilter.addEventListener('change', applyFiltersAndSearch);
 
     addBookBtn.addEventListener('click', () => addDialog.showModal());
     cancelAddBtn.addEventListener('click', () => addDialog.close());
+
+    menuToggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('is-open');
+    });
 
     addBookForm.addEventListener('submit', async (event) => {
         event.preventDefault(); // Предотвращаем стандартную отправку формы
@@ -324,6 +371,17 @@ function setupEventListeners() {
     });
 }
 
+document.addEventListener('click', (event) => {
+    // Проверяем, открыт ли сайдбар и был ли клик вне сайдбара и не по кнопке
+    if (
+        sidebar.classList.contains('is-open') &&
+        !sidebar.contains(event.target) &&
+        event.target !== menuToggleBtn
+    ) {
+        sidebar.classList.remove('is-open');
+    }
+});
+
 async function initApp() {
     try {
         const data = await fetchAllBooks();
@@ -339,7 +397,6 @@ async function initApp() {
 }
 
 // --- Логика для динамической формы добавления книги ---
-
 function initializeAddForm() {
     const formatRadios = document.querySelectorAll('input[name="format"]');
     const locationFieldset = document.getElementById('location-fieldset');

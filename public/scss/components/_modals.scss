@@ -1,5 +1,12 @@
 // public/scss/components/_modals.scss
 
+/**
+ * ===================================================================
+ * | _modals.scss: Стили для модальных окон                          |
+ * ===================================================================
+ */
+
+// Общие стили для всех модальных окон <dialog>
 dialog {
     background-color: var(--surface-color);
     color: var(--text-primary);
@@ -7,14 +14,22 @@ dialog {
     border-radius: var(--border-radius);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 
-    // Стили для подложки за модальным окном
+    // Стили для окна детального просмотра
+    &[id='detail-dialog'] {
+        max-width: 800px;
+        width: 90%;
+        margin: auto;
+    }
+
+    // Стили для "подложки"
     &::backdrop {
         background-color: rgba(0, 0, 0, 0.4);
         backdrop-filter: blur(3px);
     }
 }
 
-// Стили для детального просмотра
+// --- Стили для окна детального просмотра ---
+
 .detail-header {
     display: flex;
     gap: 25px;
@@ -33,14 +48,20 @@ dialog {
 
 .detail-header-info {
     flex-grow: 1;
+    min-width: 0;
 
-    h2 {
+    h2,
+    h3 {
         margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    h2 {
         font-size: 1.8rem;
     }
-
     h3 {
-        margin: 5px 0 15px 0;
+        margin-bottom: 15px;
         font-size: 1.2rem;
         font-weight: 400;
         color: var(--text-secondary);
@@ -61,7 +82,6 @@ dialog {
 
 .detail-section {
     margin-bottom: 25px;
-
     h4 {
         margin-top: 0;
         margin-bottom: 10px;
@@ -78,41 +98,19 @@ dialog {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 10px 20px;
-
     p {
         margin: 5px 0;
     }
-}
-
-.tag-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 5px;
-}
-
-.tag-item {
-    background-color: rgba(0, 163, 145, 0.1);
-    color: #008175;
-    padding: 5px 10px;
-    border-radius: 15px;
-    font-size: 0.85rem;
-    font-weight: 500;
 }
 
 .detail-location-wrapper {
     display: flex;
     align-items: center;
     gap: 15px;
+    margin-top: 10px;
 }
 
-#move-location-btn {
-    font-size: 0.8rem;
-    padding: 5px 10px;
-}
-
-// Стили для блока рекомендаций
-.recommendations-section {
+#recommendations-container {
     margin-top: 30px;
     padding-top: 20px;
     border-top: 1px solid var(--border-color);
@@ -129,7 +127,6 @@ dialog {
     flex: 0 0 90px;
     text-align: center;
     transition: opacity var(--transition-speed);
-
     &:hover {
         opacity: 0.8;
     }
@@ -141,11 +138,31 @@ dialog {
         border-radius: 4px;
         margin-bottom: 5px;
     }
-
     .recommendation-title {
         font-size: 0.8rem;
         color: var(--text-primary);
         margin: 0;
         line-height: 1.3;
     }
+}
+
+.collapsible-text {
+    max-height: 70px;
+    overflow: hidden;
+    position: relative;
+    transition: max-height 0.3s ease-out;
+}
+.collapsible-text.expanded {
+    max-height: 1000px;
+    // ИСПРАВЛЕНА ОШИБКА: было двоеточие, теперь пробел
+    transition: max-height 0.5s ease-in;
+}
+.show-more-btn {
+    margin-top: 5px;
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-weight: bold;
+    padding: 0;
 }

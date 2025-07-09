@@ -510,11 +510,7 @@
       "publisher": "Азбука",
       "format": "physical",
       "isOwned": true,
-      "location": {
-        "type": "home",
-        "to": null,
-        "contact": null
-      },
+      "location": "home",
       "livelib": {
         "rating": 8.81,
         "url": "https://www.livelib.ru/book/1000946941-govoryaschij-ot-imeni-mertvyh-orson-skott-kard"

@@ -1,72 +1,90 @@
 // public/scss/components/_forms.scss
 
+/**
+ * ===================================================================
+ * | _forms.scss: Стили для элементов форм                           |
+ * ===================================================================
+ * Этот файл содержит все стили, связанные с формами: полями ввода,
+ * выпадающими списками, текстовыми областями, а также их
+ * структурными контейнерами.
+ */
+
+// Контейнер для одного элемента формы (обычно label + input).
 .form-group {
+    // Общие стили для всех полей ввода внутри .form-group
     input,
     select,
     textarea {
         background-color: #fff;
         border: 1px solid var(--border-color);
         color: var(--text-primary);
-        width: 100%;
+        width: 100%; // Поля занимают всю доступную ширину.
         padding: 12px;
         border-radius: var(--border-radius);
+        transition: all var(--transition-speed); // Плавная анимация для всех свойств.
     }
 
+    // Эффект "свечения" при получении фокуса.
     input:focus,
     select:focus,
     textarea:focus {
-        outline: none;
+        outline: none; // Убираем стандартную обводку.
         border-color: var(--primary-color);
         box-shadow: 0 0 0 3px rgba(0, 163, 145, 0.1);
     }
 }
 
+// Контейнер для кнопок действий формы ("Сохранить", "Отмена").
 .form-actions {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-end; // Прижимаем кнопки к правому краю.
     gap: 10px;
     margin-top: 20px;
 }
 
+// Основной сеточный контейнер для сложных форм (добавления/редактирования).
 .edit-form-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    grid-template-columns: 1fr 1fr; // Две колонки равной ширины.
+    gap: 20px; // Отступ между ячейками сетки.
 
+    // `fieldset` используется для семантической группировки полей.
     fieldset {
         border: 1px solid var(--border-color);
         border-radius: var(--border-radius);
         padding: 20px;
         display: flex;
         flex-direction: column;
-        gap: 15px;
+        gap: 15px; // Вертикальный отступ между полями внутри fieldset.
     }
 
+    // Заголовок для `fieldset`.
     legend {
-        font-family: var(--font-header);
         font-weight: 500;
         padding: 0 10px;
         color: var(--text-secondary);
     }
 
+    // Модификатор `.wide` для `fieldset`, который заставляет его
+    // занимать все колонки в гриде (от первой до последней).
     .wide {
         grid-column: 1 / -1;
     }
 }
 
-// Стили для групп радиокнопок и чекбоксов
+// Стили для групп радиокнопок и чекбоксов для аккуратного отображения.
 .radio-group {
     display: flex;
-    gap: 15px; // Расстояние между кнопками
+    gap: 15px;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: wrap; // Позволяет переноситься на новую строку при нехватке места.
 }
 
 .radio-group label,
 .form-group > label[for^='add-isOwned'] {
-    // Стили для label у чекбокса тоже
+    // Применяем стили и к label для чекбокса "В собственности"
     display: flex;
     align-items: center;
-    gap: 5px; // Расстояние между кнопкой и текстом
-    font-weight: 400; // Обычный вес шрифта для опций
+    gap: 5px; // Отступ между радиокнопкой/чекбоксом и текстом.
+    font-weight: 400; // Обычный (не жирный) шрифт для опций.
 }

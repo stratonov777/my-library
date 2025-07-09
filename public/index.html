@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="css/main.css" />
     </head>
     <body>
+        <button id="menu-toggle-btn" class="menu-toggle-btn">☰</button>
         <div class="main-layout">
             <aside class="sidebar">
                 <div class="sidebar-header">
@@ -50,6 +51,26 @@
                                 Список желаний
                             </button>
                         </div>
+                    </div>
+
+                    <div class="controls-group">
+                        <label for="format-filter">Формат</label>
+                        <select id="format-filter">
+                            <option value="all">Все форматы</option>
+                            <option value="physical">Физические</option>
+                            <option value="ebook">Электронные</option>
+                            <option value="audiobook">Аудиокниги</option>
+                        </select>
+                    </div>
+
+                    <div class="controls-group">
+                        <label for="location-filter">Где книга?</label>
+                        <select id="location-filter">
+                            <option value="all">Все книги</option>
+                            <option value="home">Дома</option>
+                            <option value="work">На работе</option>
+                            <option value="lent">Выдана</option>
+                        </select>
                     </div>
 
                     <div class="controls-group">
@@ -145,7 +166,7 @@
                     <div class="form-group">
                         <label for="add-coverImage">URL обложки</label>
                         <input
-                            type="url"
+                            type="text"
                             id="add-coverImage"
                             name="coverImage"
                         />

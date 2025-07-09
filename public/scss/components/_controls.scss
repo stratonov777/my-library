@@ -1,18 +1,30 @@
 // public/scss/components/_controls.scss
 
+/**
+ * ===================================================================
+ * | _controls.scss: Стили для отдельных элементов управления        |
+ * ===================================================================
+ * Этот файл содержит стили для специфических элементов управления,
+ * таких как поле поиска, и для кастомных контейнеров с контролами.
+ */
+
+// Класс для контейнера с элементами управления, если он не является
+// стандартной группой в сайдбаре.
 .list-controls {
     max-width: 1400px;
     margin: 0 auto 40px auto;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap; // Для переноса на мобильных устройствах
+    flex-wrap: wrap; // Позволяет элементам переноситься на новую строку на маленьких экранах.
     gap: 15px;
 }
 
+// Уникальные стили для поля поиска.
+// Используется селектор по ID, так как этот элемент один на странице.
 #search-input {
-    flex-grow: 1; // Поиск будет занимать больше места
-    min-width: 250px;
+    flex-grow: 1; // Позволяет полю поиска занимать максимум доступного пространства.
+    min-width: 250px; // Минимальная ширина, чтобы поле не сжималось слишком сильно.
     margin: 0;
     padding: 15px 20px;
     font-size: 1rem;
@@ -21,20 +33,25 @@
     background-color: var(--surface-color);
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
-    transition: all var(--transition-speed);
+    transition: all var(--transition-speed); // Плавная анимация для всех свойств.
 
+    // Эффект при получении фокуса: рамка и тень меняют цвет.
     &:focus {
-        outline: none;
+        outline: none; // Убираем стандартную обводку браузера.
         border-color: var(--primary-color);
+        // `box-shadow` используется для создания "свечения" вокруг элемента.
         box-shadow: 0 0 0 4px rgba(0, 163, 145, 0.1);
     }
 
+    // Стиль для текста-плейсхолдера.
     &::placeholder {
         color: var(--text-secondary);
     }
 }
 
-// Общий стиль для всех select в блоке управления
+// Общий стиль для всех select в блоке управления .list-controls.
+// Примечание: эти стили НЕ применяются к select в сайдбаре, так как
+// они не находятся внутри .list-controls. Их стили определяются в _layout.scss.
 .list-controls select {
     padding: 15px;
     font-size: 1rem;

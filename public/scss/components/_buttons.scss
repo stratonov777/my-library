@@ -1,6 +1,16 @@
 // public/scss/components/_buttons.scss
 
-// Общие стили для кнопок в формах и хэдере
+/**
+ * ===================================================================
+ * | _buttons.scss: Стили для всех кнопок в приложении                |
+ * ===================================================================
+ * Этот файл содержит стили для всех интерактивных кнопок,
+ * включая основные кнопки действий и кнопки фильтрации.
+ */
+
+// --- Стили для основных кнопок действий ---
+
+// Базовый класс `.btn` для стандартной акцентной кнопки.
 .btn {
     background-color: var(--primary-color);
     color: #fff;
@@ -14,26 +24,33 @@
     font-size: 0.8rem;
     letter-spacing: 0.5px;
 
+    // Эффект при наведении курсора.
     &:hover {
         background-color: var(--primary-color-darker);
     }
 }
 
+// Модификатор `.btn-danger` для "опасных" действий, например, удаления.
 .btn-danger {
     background-color: var(--danger-color);
     &:hover {
-        background-color: #d12c4e;
+        background-color: #d12c4e; // Делаем цвет чуть темнее при наведении
     }
 }
 
+// Модификатор `.btn-secondary` для второстепенных действий, например, отмены.
 .btn-secondary {
-    background-color: #6c757d;
+    background-color: #6c757d; // Используем один из стандартных цветов Bootstrap для серого
     &:hover {
         background-color: #5a6268;
     }
 }
 
-// Кнопки фильтров
+// --- Стили для кнопок-фильтров в сайдбаре ---
+
+// Контейнер для группы кнопок-фильтров ("Все книги", "К прочтению" и т.д.).
+// Этот класс больше не используется в основной разметке сайдбара,
+// но может быть полезен в других местах.
 .filters {
     display: flex;
     justify-content: center;
@@ -41,6 +58,7 @@
     margin-bottom: 40px;
 }
 
+// Стиль для отдельной кнопки-фильтра.
 .filter-btn {
     background-color: var(--surface-color);
     border: 1px solid var(--border-color);
@@ -49,16 +67,19 @@
     padding: 10px 20px;
     border-radius: var(--border-radius);
     cursor: pointer;
-    transition: all var(--transition-speed);
+    transition: all var(--transition-speed); // Плавная анимация для всех свойств
 
+    // Эффект при наведении для неактивной кнопки.
     &:hover {
         color: var(--primary-color);
         border-color: var(--primary-color);
     }
 
+    // Стиль для активной кнопки (когда добавлен класс `.active`).
     &.active {
         background-color: var(--primary-color);
         border-color: var(--primary-color);
         color: #fff;
+        cursor: default; // У активной кнопки курсор по умолчанию, т.к. повторное нажатие не требуется
     }
 }

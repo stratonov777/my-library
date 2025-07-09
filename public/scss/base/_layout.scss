@@ -1,21 +1,35 @@
 // public/scss/base/_layout.scss
 
+/**
+ * ===================================================================
+ * | _layout.scss: Стили для основных блоков макета                  |
+ * ===================================================================
+ * Этот файл определяет структуру расположения главных элементов
+ * приложения: боковой панели и области контента.
+ */
+
+// Основной контейнер-обертка для всего приложения.
+// Используем Flexbox для простого расположения дочерних элементов в ряд.
 .main-layout {
     display: flex;
-    min-height: 100vh;
+    min-height: 100vh; // Гарантирует, что макет займет всю высоту экрана.
 }
 
+// Стили для боковой панели (сайдбара).
 .sidebar {
-    flex: 0 0 300px; // Не расти, не сжиматься, базовая ширина 300px
+    flex: 0 0 300px; // Flex-свойство: не расти, не сжиматься, базовая ширина 300px.
     background-color: var(--surface-color);
     border-right: 1px solid var(--border-color);
     display: flex;
-    flex-direction: column;
-    position: sticky; // "Приклеиваем" сайдбар
-    top: 0; // к самому верху видимой области
-    height: 100vh; // Задаем высоту равной высоте экрана
+    flex-direction: column; // Элементы внутри сайдбара будут располагаться друг под другом.
+
+    // На больших экранах сайдбар "прилипает" к верху и не прокручивается вместе с контентом.
+    position: sticky;
+    top: 0;
+    height: 100vh; // Высота равна высоте видимой области экрана.
 }
 
+// Заголовок внутри сайдбара.
 .sidebar-header {
     padding: 20px;
     border-bottom: 1px solid var(--border-color);
@@ -26,36 +40,59 @@
     }
 }
 
+// Контентная часть сайдбара, где находятся все фильтры.
 .sidebar-content {
     padding: 20px;
-    overflow-y: auto; // Если фильтров много, появится скролл
+    overflow-y: auto; // Если фильтров станет слишком много, появится вертикальная прокрутка.
 }
 
+// Основная область для отображения контента (карточек книг).
 .content {
-    flex: 1; // Занимает все остальное пространство
-    padding: 40px;
+    flex: 1; // Занимает всё оставшееся доступное пространство в .main-layout.
+    padding: 40px; // Внутренние отступы для контента.
+    // На мобильных устройствах этот padding будет изменен в _responsive.scss.
 }
 
+// Стили для обертки группы элементов управления в сайдбаре (например, label + select).
 .controls-group {
-    margin-bottom: 25px;
+    margin-bottom: 18px; // Вертикальный отступ между группами.
 
     label {
-        display: block;
+        display: block; // Заголовок группы занимает всю ширину.
         font-weight: 500;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
         color: var(--text-secondary);
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
 
+    // Растягиваем селекты, инпуты и кнопки на всю ширину родителя.
     select,
     input,
     .btn {
         width: 100%;
     }
 
+    // Контейнер для кнопок-фильтров ("Все книги", "К прочтению" и т.д.).
     .filters {
         display: flex;
         flex-direction: column;
         gap: 8px;
     }
+}
+
+// Кнопка-гамбургер для мобильных устройств.
+// По умолчанию она скрыта. Правила для ее отображения находятся в _responsive.scss.
+.menu-toggle-btn {
+    display: none;
+    position: fixed; // Фиксированное позиционирование относительно окна браузера.
+    top: 15px;
+    left: 15px;
+    z-index: 1001; // Должна быть поверх всех остальных элементов.
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    width: 45px;
+    height: 45px;
+    font-size: 1.5rem;
+    cursor: pointer;
 }
